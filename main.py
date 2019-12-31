@@ -1,35 +1,62 @@
+from logging import info
 from datetime import datetime, timedelta
 from airflow.models import DAG
 from airflow.operators.python_operator import PythonOperator
 
 
 args = {
-    "start_date": datetime(2019, 11, 01),
     'owner': 'airflow'
 }
 
-dag_1 = DAG(
-    dag_id='dag_1_second_1',
-    schedule_interval=timedelta(seconds=1),
-    default_args=args
-)
+
+def t1():
+    print("DONE TASK 1")
 
 
-def hello(task_id):
-    with open('./result', 'a+') as fd:
-        now = str(datetime.now())
-        fd.write(f'Task {task_id}: {now}\n')
+def t2():
+    print("DONE TASK 1")
 
 
-def gen_task_1_second(dag):
-    for id in range(1000):
-        task_id = dag.dag_id + "_id_" + str(id)
-        task = PythonOperator(
-            task_id=task_id,
-            python_callable=hello,
-            op_kwargs={"task_id": task_id},
-            dag=dag
-        )
+for num in range(5):
+    dag_id = "dag_" + str(num)
 
+    dag = DAG(
+        dag_id=dag_id,
+        schedule_interval=timedelta(seconds=5),
+        start_date=datetime(2019, 11, 1),
+        default_args=args
+    )
 
-gen_task_1_second(dag_1)
+    PythonOperator(
+        task_id="task_" + dag_id,
+        python_callable=t1,
+        dag=dag
+    )
+
+    globals()[dag_id] = dag
+
+# dag = DAG(
+#     dag_id="dag_1",
+#     schedule_interval=timedelta(seconds=1),
+#     start_date=datetime(2019, 11, 1),
+#     default_args=args
+# )
+
+# PythonOperator(
+#     task_id="task_1",
+#     python_callable=t1,
+#     dag=dag
+# )
+
+# dag_2 = DAG(
+#     dag_id="dag_2",
+#     schedule_interval=timedelta(seconds=1),
+#     start_date=datetime(2019, 11, 1),
+#     default_args=args
+# )
+
+# PythonOperator(
+#     task_id="task_2",
+#     python_callable=t2,
+#     dag=dag_2
+# )

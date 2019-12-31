@@ -19,6 +19,7 @@ Please check https://airflow.apache.org/start.html for details
 3. Run scheduler:
 
 ```
+airflow webserver -p 8080
 airflow scheduler
 ```
 
