@@ -14,49 +14,34 @@ def t1():
 
 
 def t2():
-    print("DONE TASK 1")
+    print("DONE TASK 2")
 
 
-for num in range(5):
-    dag_id = "dag_" + str(num)
+def t3():
+    print("DONE TASK 3")
 
-    dag = DAG(
-        dag_id=dag_id,
-        schedule_interval=timedelta(seconds=5),
-        start_date=datetime(2019, 11, 1),
-        default_args=args
-    )
 
-    PythonOperator(
-        task_id="task_" + dag_id,
-        python_callable=t1,
-        dag=dag
-    )
+def generate_dag(num):
+    for i in range(num):
+        dag_id = "dag_" + str(i)
 
-    globals()[dag_id] = dag
+        dag = DAG(
+            dag_id=dag_id,
+            schedule_interval=timedelta(seconds=10),
+            start_date=datetime(2019, 11, 1),
+            default_args=args
+        )
 
-# dag = DAG(
-#     dag_id="dag_1",
-#     schedule_interval=timedelta(seconds=1),
-#     start_date=datetime(2019, 11, 1),
-#     default_args=args
-# )
+        PythonOperator(
+            task_id="task_" + dag_id,
+            python_callable=t1,
+            dag=dag
+        )
 
-# PythonOperator(
-#     task_id="task_1",
-#     python_callable=t1,
-#     dag=dag
-# )
+        globals()[dag_id] = dag
 
-# dag_2 = DAG(
-#     dag_id="dag_2",
-#     schedule_interval=timedelta(seconds=1),
-#     start_date=datetime(2019, 11, 1),
-#     default_args=args
-# )
 
-# PythonOperator(
-#     task_id="task_2",
-#     python_callable=t2,
-#     dag=dag_2
-# )
+generate_dag(5)
+
+# globals()[dag_id] = dag
+# Let r
